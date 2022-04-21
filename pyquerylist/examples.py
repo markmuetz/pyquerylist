@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from querylist import Query as Q, FuncQuery as FQ, QueryList
+from pyquerylist import Query as Q, FuncQuery as FQ, QueryList
 
 
 @dataclass

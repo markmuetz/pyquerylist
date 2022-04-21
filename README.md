@@ -1,5 +1,5 @@
-querylist
-=========
+pyquerylist
+===========
 
 Extension of base Python `list` that you can query. Queries are chainable and invertable with logical operators (`& | ~`). Simple operations such as `.where(...)`, to filter, `.select(...)` to choose fields, and `.aggregate(...)` to e.g. sum over a field are supported. `.groupby(...)` can be also used to `.count()` and `.aggregate(...)` `QueryList`s as well.
 
@@ -9,7 +9,7 @@ example.py
 ```python
 from dataclasses import dataclass
 
-from querylist import Query as Q, FuncQuery as FQ, QueryList
+from pyquerylist import Query as Q, FuncQuery as FQ, QueryList
 
 
 @dataclass

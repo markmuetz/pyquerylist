@@ -41,7 +41,7 @@ setup(
         'Bug Tracker': 'https://github.com/markmuetz/pyquerylist/issues',
     },
     packages=[
-        'querylist',
+        'pyquerylist',
     ],
     install_requires=[
         'tabulate',
