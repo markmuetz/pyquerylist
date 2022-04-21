@@ -16,10 +16,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # python-version: [3.7, 3.8, 3.9, "3.10"]
+        # fix with pip install babelfish -U below
+        python-version: [3.7, 3.8, 3.9, "3.10"]
         # 3.10 failing with: AttributeError: module 'collections' has no attribute 'Callable'
         # nose problem I think.
-        python-version: [3.7, 3.8, 3.9]
+        # python-version: [3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -31,6 +32,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install .[testing]
+        pip install babelfish -U
     - name: Test with nose and doctest
       run: |
         nosetests tests
