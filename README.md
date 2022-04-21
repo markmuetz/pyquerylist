@@ -3,6 +3,13 @@ pyquerylist
 
 Extension of base Python `list` that you can query. Queries are chainable and invertable with logical operators (`& | ~`). Simple operations such as `.where(...)`, to filter, `.select(...)` to choose fields, and `.aggregate(...)` to e.g. sum over a field are supported. `.groupby(...)` can be also used to `.count()` and `.aggregate(...)` `QueryList`s as well.
 
+Installation
+------------
+
+```bash
+pip install pyquerylist
+```
+
 example.py
 ---------- 
 
