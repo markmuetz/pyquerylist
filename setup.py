@@ -8,7 +8,7 @@ except ImportError:
     from distutils.core import setup
 
 version = sp.run(
-    'python querylist/version.py',
+    'python pyquerylist/version.py',
     check=True,
     shell=True,
     stdout=sp.PIPE,
