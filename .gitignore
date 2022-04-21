@@ -1,0 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+querylist.egg-info
+
+# C extensions
+*.so
+
+build/
+dist/
+MANIFEST
+
+# vim
+.*.sw?
+
+# PyCharm
+.idea
