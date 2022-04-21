@@ -46,6 +46,9 @@ setup(
     install_requires=[
         'tabulate',
     ],
+    extras_require={
+        'testing': ['coverage', 'flake8', 'nose'],
+    },
     python_requires='>=3.6',
     classifiers=[
         'Environment :: Console',
