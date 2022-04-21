@@ -10,6 +10,11 @@ Installation
 pip install pyquerylist
 ```
 
+Documentation
+-------------
+
+Documentation is available at [http://markmuetz.github.io/pyquerylist/](http://markmuetz.github.io/pyquerylist/).
+
 example.py
 ---------- 
 

@@ -12,6 +12,7 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../..'))
 
 
@@ -22,6 +23,7 @@ copyright = '2022, Mark Muetzelfeldt'
 author = 'Mark Muetzelfeldt'
 
 from pyquerylist import version
+
 version = version.get_version('short')
 
 

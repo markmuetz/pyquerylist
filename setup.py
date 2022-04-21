@@ -38,6 +38,7 @@ setup(
     maintainer_email='mark.muetzelfeldt@reading.ac.uk',
     url='https://github.com/markmuetz/pyquerylist',
     project_urls={
+        'Documentation': 'https://markmuetz.github.io/pyquerylist/',
         'Bug Tracker': 'https://github.com/markmuetz/pyquerylist/issues',
     },
     packages=[
