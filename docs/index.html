@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyquerylist 0.2.0 documentation &#8212; pyquerylist  documentation</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Python API" href="pyquerylist_package.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="#">
+<p class="title">pyquerylist</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="pyquerylist_package.html">
+  Python API
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#installation">
+   Installation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-py">
+   example.py
+  </a>
+  <ul class="nav section-nav flex-column">
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#indices-and-tables">
+   Indices and tables
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="pyquerylist-version-documentation">
+<h1>pyquerylist 0.2.0 documentation<a class="headerlink" href="#pyquerylist-version-documentation" title="Permalink to this headline">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
+<p>Extension of base Python <code class="docutils literal notranslate"><span class="pre">list</span></code> that you can query. Queries are chainable and invertable with logical operators (<code class="docutils literal notranslate"><span class="pre">&amp;</span> <span class="pre">|</span> <span class="pre">~</span></code>). Simple operations such as <code class="docutils literal notranslate"><span class="pre">.where(...)</span></code>, to filter, <code class="docutils literal notranslate"><span class="pre">.select(...)</span></code> to choose fields, and <code class="docutils literal notranslate"><span class="pre">.aggregate(...)</span></code> to e.g. sum over a field are supported. <code class="docutils literal notranslate"><span class="pre">.groupby(...)</span></code> can be also used to <code class="docutils literal notranslate"><span class="pre">.count()</span></code> and <code class="docutils literal notranslate"><span class="pre">.aggregate(...)</span></code> <code class="docutils literal notranslate"><span class="pre">QueryList</span></code> as well.</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install pyquerylist
+</pre></div>
+</div>
+</section>
+<section id="example-py">
+<h2>example.py<a class="headerlink" href="#example-py" title="Permalink to this headline">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span> <span class="nn">pyquerylist</span> <span class="kn">import</span> <span class="n">Query</span> <span class="k">as</span> <span class="n">Q</span><span class="p">,</span> <span class="n">FuncQuery</span> <span class="k">as</span> <span class="n">FQ</span><span class="p">,</span> <span class="n">QueryList</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Book</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price_pence</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="nf">price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">price_pence</span> <span class="o">/</span> <span class="mi">100</span>
+
+    <span class="k">def</span> <span class="nf">vat_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.2</span>
+
+
+<span class="n">books</span> <span class="o">=</span> <span class="n">QueryList</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;Three crows&#39;</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="s1">&#39;fantasy&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;Molly had a little calf&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="s1">&#39;child&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;Time for another&#39;</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="s1">&#39;bargain&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;Of stars and mud&#39;</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="s1">&#39;highbrow&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;The Fruggalo&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;child&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;Three women in a canoe&#39;</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="s1">&#39;classic&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;Who turns the page&#39;</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="s1">&#39;mystery&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;The sword of silver&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;fantasy&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;Murder at 30000 ft&#39;</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="s1">&#39;mystery&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;Once I saw a little mouse&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;child&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;The Leonardo code&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;bargain&#39;</span><span class="p">),</span>
+        <span class="n">Book</span><span class="p">(</span><span class="s1">&#39;The place we are at&#39;</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="s1">&#39;highbrow&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<span class="c1"># books can be filtered on one of their fields.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;The Fruggalo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<span class="c1"># This can also be done using a query.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;The Fruggalo&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<span class="c1"># Queries can be inverted.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">Q</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;The Fruggalo&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<span class="c1"># books is a list -- can be indexed or sliced:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># books can be filtered on multiple fields, showing price &lt;= 3.</span>
+<span class="c1"># if a field is a function (is callable) - it will be called (i.e. price).</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="s1">&#39;fantasy&#39;</span><span class="p">,</span> <span class="n">price__le</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+<span class="c1"># Equivalent to above using queries.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;fantasy&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+
+<span class="c1"># Queries can be combined using logical operators, and ordered by field(s).</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="n">books</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;fantasy&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">orderby</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;descending&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">])</span>
+<span class="p">)</span>
+<span class="c1"># `lambda`s can be used, and fields can be chosen using `.select(...)`.</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="n">books</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">Q</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;fantasy&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">FQ</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">price</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">])</span>
+<span class="p">)</span>
+<span class="c1"># Simple aggregate operations available.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="nb">sum</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="nb">sum</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;vat_price&#39;</span><span class="p">]))</span>
+
+<span class="c1"># Simple group by operator (returns a dict subclass), with group operations count and aggregate.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)[</span><span class="s1">&#39;mystery&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="nb">sum</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">))</span>
+
+<span class="c1"># QueryLists can be formatted for tabular display.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">books</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="s1">&#39;fantasy&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tabulate</span><span class="p">([</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyquerylist_package.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyquerylist_package.html#pyquerylist-classes">pyquerylist classes</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='right-next' id="next-link" href="pyquerylist_package.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Python API</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2022, Mark Muetzelfeldt.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
