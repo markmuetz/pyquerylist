@@ -80,10 +80,6 @@ class BaseQuery:
     def __ror__(self, other):
         return MultiQuery(other, self, operator.__or__)
 
-    def __invert__(self):
-        self.inverted = not self.inverted
-        return self
-
 
 class Query(BaseQuery):
     """Combinable query class, where condition is specified by a field, operator and value.
@@ -146,6 +142,9 @@ class Query(BaseQuery):
     def __repr__(self):
         return f"Query('{self.field}', '{self._op}', {repr(self.val)}, {self.inverted})"
 
+    def __invert__(self):
+        return Query(self.field, self._op, self.val, not self.inverted)
+
 
 class FuncQuery(BaseQuery):
     """Combinable query class, where condition is specified by a function/lambda
@@ -190,6 +189,9 @@ class FuncQuery(BaseQuery):
 
     def __repr__(self):
         return f"FuncQuery('{self.func}', {self.inverted})"
+
+    def __invert__(self):
+        return FuncQuery(self.func, not self.inverted)
 
 
 class MultiQuery(BaseQuery):
@@ -236,6 +238,9 @@ class MultiQuery(BaseQuery):
     def __repr__(self):
         opstr = '&' if self.op == operator.__and__ else '|'
         return '(' + repr(self.lhs) + opstr + repr(self.rhs) + ')'
+
+    def __invert__(self):
+        return MultiQuery(self.lhs, self.rhs, self.op, not self.inverted)
 
 
 class QueryList(list):
