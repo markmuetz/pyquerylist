@@ -25,7 +25,7 @@ def read(fname):
 
 
 setup(
-    name='querylist',
+    name='query-list',
     version=version,
     description='List that you can query',
     include_package_data=True,
@@ -36,9 +36,9 @@ setup(
     author_email='mark.muetzelfeldt@reading.ac.uk',
     maintainer='Mark Muetzelfeldt',
     maintainer_email='mark.muetzelfeldt@reading.ac.uk',
-    url='https://github.com/markmuetz/querylist',
+    url='https://github.com/markmuetz/query-list',
     project_urls={
-        'Bug Tracker': 'https://github.com/markmuetz/querylist/issues',
+        'Bug Tracker': 'https://github.com/markmuetz/query-list/issues',
     },
     packages=[
         'querylist',
