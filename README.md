@@ -1,4 +1,4 @@
-pyquerylist
+pyquerylist [![Build Status](https://github.com/markmuetz/pyquerylist/actions/workflows/python-package.yml/badge.svg)](https://github.com/markmuetz/pyquerylist/actions/workflows/python-package.yml) 
 ===========
 
 Extension of base Python `list` that you can query. Queries are chainable and invertable with logical operators (`& | ~`). Simple operations such as `.where(...)`, to filter, `.select(...)` to choose fields, and `.aggregate(...)` to e.g. sum over a field are supported. `.groupby(...)` can be also used to `.count()` and `.aggregate(...)` `QueryList`s as well.

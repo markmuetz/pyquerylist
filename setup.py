@@ -49,12 +49,12 @@ setup(
     extras_require={
         'testing': ['coverage', 'flake8', 'nose'],
     },
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     classifiers=[
         'Environment :: Console',
         'Natural Language :: English',
         'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Development Status :: 4 - Beta',
     ],
 )
