@@ -19,6 +19,7 @@ OPMAP = {
 
 ITEM_GETTERS = {
     'obj': getattr,
+    object: getattr,
     'dict': dict.__getitem__,
     dict: dict.__getitem__,
 }
@@ -437,7 +438,7 @@ class QueryList(list):
                         [_get_field_val(item, f, self.item_type) for f in fields]
                     )
 
-        return QueryList(sorted(self, key=key, reverse=reverse))
+        return QueryList(sorted(self, key=key, reverse=reverse), self.item_type)
 
     def groupby(self, field=None):
         """Group on given field.
@@ -453,7 +454,7 @@ class QueryList(list):
         for k, g in groupby(self, lambda x: _get_field_val(x, field, self.item_type)):
             group[k].extend(g)
         for k, v in group.items():
-            group[k] = QueryList(v)
+            group[k] = QueryList(v, self.item_type)
         return QueryGroup(group)
 
     def aggregate(self, method, field=None, fields=None):
@@ -529,6 +530,10 @@ class QueryGroup(dict):
     def aggregate(self, method, field=None, fields=None):
         """Aggregate over instances of each group using method and field(s).
 
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 1, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.groupby('a').aggregate(sum, 'b')
+        {1: 7, 7: 9}
+
         :param method: method to use (e.g. `statistics.mean`)
         :param field: field to aggregate over
         :param fields: fields to aggregate over
@@ -540,4 +545,26 @@ class QueryGroup(dict):
         aggr = {}
         for key, query_list in self.items():
             aggr[key] = query_list.aggregate(**kwargs)
+        return aggr
+
+    def select(self, field=None, fields=None, func=None):
+        """Select given field(s) from instances of each group.
+
+        Exactly one of the three arguments must be supplied.
+
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 1, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.groupby('a').select('b')
+        {1: [2, 5], 7: [9]}
+
+        :param field: field to select
+        :param fields: multiple fields to select
+        :param func: function to apply to item -- output is selected
+        :return: aggregated values dict with key (group) and value (selected fields)
+        """
+        if sum([bool(field), bool(fields), bool(func)]) != 1:
+            raise ValueError('Exactly one of "field", "fields", or "func" must be set')
+        kwargs = dict(field=field, fields=fields, func=func)
+        aggr = {}
+        for key, query_list in self.items():
+            aggr[key] = query_list.select(**kwargs)
         return aggr
