@@ -136,7 +136,7 @@ class Query(BaseQuery):
         else:
             retval = self.op(item_val, self.val)
         if self.inverted:
-            return not retval
+            return retval == False
         else:
             return retval
 
@@ -184,7 +184,7 @@ class FuncQuery(BaseQuery):
         """
         retval = self.func(item)
         if self.inverted:
-            return not retval
+            return retval == False
         else:
             return retval
 
@@ -232,7 +232,7 @@ class MultiQuery(BaseQuery):
             self.lhs.match(item, item_type), self.rhs.match(item, item_type)
         )
         if self.inverted:
-            return not retval
+            return retval == False
         else:
             return retval
 
