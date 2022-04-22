@@ -246,12 +246,12 @@ class MultiQuery(BaseQuery):
 class QueryList(list):
     """Queryable list.
 
-    >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-    >>> len(querylist)
+    >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+    >>> len(ql)
     3
-    >>> querylist[:2]
+    >>> ql[:2]
     QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}])
-    >>> querylist.where(a=1).select('a')
+    >>> ql.where(a=1).select('a')
     [1]
     """
 
@@ -277,10 +277,10 @@ class QueryList(list):
     def where(self, query=None, **kwargs):
         """Filter based on query.
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.where(Query('a', '=', 1))
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.where(Query('a', '=', 1))
         QueryList([{'a': 1, 'b': 2}])
-        >>> querylist.where(b__gt=8)
+        >>> ql.where(b__gt=8)
         QueryList([{'a': 7, 'b': 9}])
 
         :param query: query to apply
@@ -312,12 +312,12 @@ class QueryList(list):
 
         Exactly one of the three arguments must be supplied.
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.select('a')
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.select('a')
         [1, 4, 7]
-        >>> querylist.select(fields=['a', 'b'])
+        >>> ql.select(fields=['a', 'b'])
         [(1, 2), (4, 5), (7, 9)]
-        >>> querylist.select(func=lambda x: x['a']**2)
+        >>> ql.select(func=lambda x: x['a']**2)
         [1, 16, 49]
 
         :param field: field to select.
@@ -340,10 +340,10 @@ class QueryList(list):
     def count(self):
         """Get number of items.
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.count()
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.count()
         3
-        >>> querylist.count() == len(querylist)
+        >>> ql.count() == len(ql)
         True
 
         :return: number of items
@@ -352,8 +352,9 @@ class QueryList(list):
 
     def first(self):
         """Get first item.
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.first()
+
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.first()
         {'a': 1, 'b': 2}
 
         :return: first item
@@ -362,8 +363,9 @@ class QueryList(list):
 
     def last(self):
         """Get last item.
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.last()
+
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.last()
         {'a': 7, 'b': 9}
 
         :return: first item
@@ -373,10 +375,10 @@ class QueryList(list):
     def all(self, query):
         """Test if all items match query.
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.all(Query('a', '>', 0))
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.all(Query('a', '>', 0))
         True
-        >>> querylist.all(Query('a', '>', 4))
+        >>> ql.all(Query('a', '>', 4))
         False
 
         :param query: query to test
@@ -387,10 +389,10 @@ class QueryList(list):
     def any(self, query):
         """Test if any items match query.
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.any(Query('a', '>', 10))
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.any(Query('a', '>', 10))
         False
-        >>> querylist.any(Query('a', '>', 4))
+        >>> ql.any(Query('a', '>', 4))
         True
 
         :param query: query to test
@@ -403,12 +405,12 @@ class QueryList(list):
 
         Exactly one of field, fields or key must be supplied.
 
-        >>> querylist = QueryList([{'a': 5, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.orderby('a')
+        >>> ql = QueryList([{'a': 5, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.orderby('a')
         QueryList([{'a': 4, 'b': 5}, {'a': 5, 'b': 2}, {'a': 7, 'b': 9}])
-        >>> querylist.orderby(fields=['a', 'b'])
+        >>> ql.orderby(fields=['a', 'b'])
         QueryList([{'a': 4, 'b': 5}, {'a': 5, 'b': 2}, {'a': 7, 'b': 9}])
-        >>> querylist.orderby(key=lambda x: x['b'], order='descending')
+        >>> ql.orderby(key=lambda x: x['b'], order='descending')
         QueryList([{'a': 7, 'b': 9}, {'a': 4, 'b': 5}, {'a': 5, 'b': 2}])
 
         :param field: field to order by
@@ -440,8 +442,8 @@ class QueryList(list):
     def groupby(self, field=None):
         """Group on given field.
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 1, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.groupby('a')
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 1, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.groupby('a')
         {1: QueryList([{'a': 1, 'b': 2}, {'a': 1, 'b': 5}]), 7: QueryList([{'a': 7, 'b': 9}])}
 
         :param field: field to group on
@@ -459,10 +461,10 @@ class QueryList(list):
 
         Exactly one of field or fields must be supplied.
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.aggregate(sum, 'a')
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.aggregate(sum, 'a')
         12
-        >>> querylist.aggregate(sum, fields=['a', 'b'])
+        >>> ql.aggregate(sum, fields=['a', 'b'])
         [12, 16]
 
         :param method: method to use (e.g. `statistics.mean`)
@@ -483,8 +485,8 @@ class QueryList(list):
     def tabulate(self, fields):
         """Produce a formated table of a QueryList
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> print(querylist.tabulate(['a', 'b']))
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 4, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> print(ql.tabulate(['a', 'b']))
           a    b
         ---  ---
           1    2
@@ -516,8 +518,8 @@ class QueryGroup(dict):
     def count(self):
         """Count instances of each group.
 
-        >>> querylist = QueryList([{'a': 1, 'b': 2}, {'a': 1, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
-        >>> querylist.groupby('a').count()
+        >>> ql = QueryList([{'a': 1, 'b': 2}, {'a': 1, 'b': 5}, {'a': 7, 'b': 9}], 'dict')
+        >>> ql.groupby('a').count()
         {1: 2, 7: 1}
 
         :return: dict containing key (group) and values (counts)
