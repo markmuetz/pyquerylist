@@ -27,7 +27,7 @@ ITEM_GETTERS = {
 def _check_item_type(item_type):
     """Raises a ValueError if item_type not supported.
 
-    :param item_type: requested item type.
+    :param item_type: requested item type
     :return: None
     """
     if item_type not in ITEM_GETTERS:
@@ -64,7 +64,7 @@ class BaseQuery:
     def __init__(self, inverted):
         """Constructor.
 
-        :param inverted: whether to invert any matches.
+        :param inverted: whether to invert any matches
         """
         self.inverted = inverted
 
@@ -159,8 +159,8 @@ class FuncQuery(BaseQuery):
     def __init__(self, func, inverted=False):
         """Constructor that takes a function/lambda as argument.
 
-        :param func: function or lambda for query condition.
-        :param inverted: whether to invert the condition.
+        :param func: function or lambda for query condition
+        :param inverted: whether to invert the condition
         """
         super().__init__(inverted)
         self.func = func
@@ -202,7 +202,7 @@ class MultiQuery(BaseQuery):
 
         :param lhs: query1
         :param rhs: query2
-        :param op: operator used to combine query1 and query2.
+        :param op: operator used to combine query1 and query2
         """
         super().__init__(inverted)
         self.lhs = lhs
@@ -223,9 +223,9 @@ class MultiQuery(BaseQuery):
         >>> (~(q1 | q2)).match(item, 'obj')
         False
 
-        :param item:
-        :param item_type:
-        :return:
+        :param item: item to test
+        :param item_type: type of item
+        :return: True if item matches query
         """
         retval = self.op(
             self.lhs.match(item, item_type), self.rhs.match(item, item_type)
@@ -258,8 +258,8 @@ class QueryList(list):
     def __init__(self, iterable=None, item_type='obj'):
         """Construct QueryList based on existing list-like object, and with a given type.
 
-        :param iterable: iterable (e.g. list) used to create this.
-        :param item_type: type of each item (see ITEM_GETTERS for allowed types).
+        :param iterable: iterable (e.g. list) used to create this
+        :param item_type: type of each item (see ITEM_GETTERS for allowed types)
         """
         _check_item_type(item_type)
         self.item_type = item_type
@@ -320,10 +320,10 @@ class QueryList(list):
         >>> ql.select(func=lambda x: x['a']**2)
         [1, 16, 49]
 
-        :param field: field to select.
-        :param fields: multiple fields to select.
-        :param func: function to apply to item -- output is selected.
-        :return: list of selected field(s) or function output.
+        :param field: field to select
+        :param fields: multiple fields to select
+        :param func: function to apply to item -- output is selected
+        :return: list of selected field(s) or function output
         """
         if sum([bool(field), bool(fields), bool(func)]) != 1:
             raise ValueError('Exactly one of "field", "fields", or "func" must be set')
@@ -382,7 +382,7 @@ class QueryList(list):
         False
 
         :param query: query to test
-        :return: True if all items match query.
+        :return: True if all items match query
         """
         return len(self.where(query)) == len(self)
 
@@ -396,7 +396,7 @@ class QueryList(list):
         True
 
         :param query: query to test
-        :return: True if all items match query.
+        :return: True if all items match query
         """
         return len(self.where(query)) != 0
 
@@ -447,7 +447,7 @@ class QueryList(list):
         {1: QueryList([{'a': 1, 'b': 2}, {'a': 1, 'b': 5}]), 7: QueryList([{'a': 7, 'b': 9}])}
 
         :param field: field to group on
-        :return: QueryGroup of grouped data
+        :return: `QueryGroup` of grouped data
         """
         group = defaultdict(list)
         for k, g in groupby(self, lambda x: _get_field_val(x, field, self.item_type)):
@@ -468,8 +468,8 @@ class QueryList(list):
         [12, 16]
 
         :param method: method to use (e.g. `statistics.mean`)
-        :param field: field to aggregate over.
-        :param fields: fields to aggregate over.
+        :param field: field to aggregate over
+        :param fields: fields to aggregate over
         :return: aggregated values
         """
         if sum([bool(field), bool(fields)]) != 1:
@@ -494,7 +494,7 @@ class QueryList(list):
           7    9
 
         :param fields: to use as headers/values
-        :return: output string of table.
+        :return: output string of table
         """
         return tabulate(self.select(fields=fields), headers=fields)
 
@@ -530,8 +530,8 @@ class QueryGroup(dict):
         """Aggregate over instances of each group using method and field(s).
 
         :param method: method to use (e.g. `statistics.mean`)
-        :param field: field to aggregate over.
-        :param fields: fields to aggregate over.
+        :param field: field to aggregate over
+        :param fields: fields to aggregate over
         :return: aggregated values dict with key (group) and value (aggregated value)
         """
         if sum([bool(field), bool(fields)]) != 1:
