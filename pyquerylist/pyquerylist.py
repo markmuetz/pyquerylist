@@ -559,7 +559,7 @@ class QueryGroup(dict):
         :param field: field to select
         :param fields: multiple fields to select
         :param func: function to apply to item -- output is selected
-        :return: aggregated values dict with key (group) and value (selected fields)
+        :return: aggregated values dict with key (group) and value (selected field(s))
         """
         if sum([bool(field), bool(fields), bool(func)]) != 1:
             raise ValueError('Exactly one of "field", "fields", or "func" must be set')
