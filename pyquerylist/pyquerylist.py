@@ -113,7 +113,7 @@ class Query(BaseQuery):
         else:
             self.op = op
 
-    def match(self, item, item_type):
+    def match(self, item, item_type='obj'):
         """Determine if item matches query.
 
         >>> q1 = Query('field1', '>', 5)
@@ -166,7 +166,7 @@ class FuncQuery(BaseQuery):
         super().__init__(inverted)
         self.func = func
 
-    def match(self, item, item_type):
+    def match(self, item, item_type='obj'):
         """Determine if item matches function query.
 
         >>> q1 = FuncQuery(lambda x: x.field1 > 5)
@@ -210,7 +210,7 @@ class MultiQuery(BaseQuery):
         self.rhs = rhs
         self.op = op
 
-    def match(self, item, item_type):
+    def match(self, item, item_type='obj'):
         """
 
         >>> q1 = Query('field1', '>', 5)
