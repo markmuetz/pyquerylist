@@ -1,20 +1,22 @@
 Python API
 ==========
 
-pyquerylist classes
--------------------
+Query
+-----
 
 .. autoclass:: pyquerylist.Query
     :members:
     :undoc-members:
 
-.. autoclass:: pyquerylist.FuncQuery
-    :members:
-    :undoc-members:
+QueryList
+---------
 
 .. autoclass:: pyquerylist.QueryList
     :members:
     :undoc-members:
+
+QueryGroup
+----------
 
 .. autoclass:: pyquerylist.QueryGroup
     :members:

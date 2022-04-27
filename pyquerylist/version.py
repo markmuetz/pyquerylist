@@ -1,12 +1,12 @@
-VERSION = (0, 2, 2, 0, 'beta')
+VERSION = (0, 3, 0, 0, 'beta')
 
 
 def get_version(form: str = 'short') -> str:
-    """Get remake version
+    """Get pyquerylist version
 
     :param form: one of short, medium or long
     :raises: ValueError if form unrecognized
-    :return: remake version in desired form
+    :return: pyquerylist version in desired form
     """
     if form == 'short':
         return '.'.join([str(v) for v in VERSION[:3]])

@@ -31,7 +31,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="pyquerylist 0.2.2 documentation" href="index.html" />
+    <link rel="prev" title="pyquerylist 0.3.0 documentation" href="index.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -125,8 +125,18 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pyquerylist-classes">
-   pyquerylist classes
+  <a class="reference internal nav-link" href="#query">
+   Query
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#querylist">
+   QueryList
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#querygroup">
+   QueryGroup
   </a>
  </li>
 </ul>
@@ -152,31 +162,51 @@
                 
   <section id="python-api">
 <h1>Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">#</a></h1>
-<section id="pyquerylist-classes">
-<h2>pyquerylist classes<a class="headerlink" href="#pyquerylist-classes" title="Permalink to this headline">#</a></h2>
+<section id="query">
+<h2>Query<a class="headerlink" href="#query" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyquerylist.Query">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyquerylist.</span></span><span class="sig-name descname"><span class="pre">Query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyquerylist.Query" title="Permalink to this definition">#</a></dt>
-<dd><p>Combinable query class, where condition is specified by a field, operator and value.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyquerylist.</span></span><span class="sig-name descname"><span class="pre">Query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyquerylist.Query" title="Permalink to this definition">#</a></dt>
+<dd><p>Combinable query class.</p>
+<p>Condition can be specified in different ways:</p>
+<ul class="simple">
+<li><p>specified by a field, operator and value.</p></li>
+<li><p>specified by a lambda or function.</p></li>
+<li><p>specified by key value pairs.</p></li>
+</ul>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">q1</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="s1">&#39;field1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q2</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="s1">&#39;field1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q2</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">field1</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q3</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">field1</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q4</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">field1__lt</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">field2</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q5</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="n">q3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">qand</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">&amp;</span> <span class="n">q2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qor</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">|</span> <span class="n">q2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qnand</span> <span class="o">=</span> <span class="o">~</span><span class="n">q1</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">q2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qor</span> <span class="o">=</span> <span class="n">q2</span> <span class="o">|</span> <span class="n">q4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qnand</span> <span class="o">=</span> <span class="o">~</span><span class="n">q1</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">q3</span>
 </pre></div>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyquerylist.Query.match">
-<span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyquerylist.Query.match" title="Permalink to this definition">#</a></dt>
-<dd><p>Determine if item matches query.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">q1</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="s1">&#39;field1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Item</span><span class="p">:</span> <span class="k">pass</span>
+<span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'obj'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyquerylist.Query.match" title="Permalink to this definition">#</a></dt>
+<dd><p>Determine if the given item is matched by this query.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Item</span><span class="p">:</span> <span class="k">pass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">item</span><span class="o">.</span><span class="n">field1</span> <span class="o">=</span> <span class="mi">6</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q1</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;obj&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">item</span><span class="o">.</span><span class="n">field2</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q1</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="s1">&#39;field1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q2</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">field1</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q3</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">field1</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q4</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">field1__lt</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">field2</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q5</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="n">q3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q1</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="o">~</span><span class="n">q1</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;obj&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q2</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q3</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q4</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q5</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -194,46 +224,9 @@
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="pyquerylist.FuncQuery">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyquerylist.</span></span><span class="sig-name descname"><span class="pre">FuncQuery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyquerylist.FuncQuery" title="Permalink to this definition">#</a></dt>
-<dd><p>Combinable query class, where condition is specified by a function/lambda</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">q1</span> <span class="o">=</span> <span class="n">FuncQuery</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">field1</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q2</span> <span class="o">=</span> <span class="n">FuncQuery</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">field1</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qand</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">&amp;</span> <span class="n">q2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qor</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">|</span> <span class="n">q2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">qnand</span> <span class="o">=</span> <span class="o">~</span><span class="n">q1</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">q2</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyquerylist.FuncQuery.match">
-<span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyquerylist.FuncQuery.match" title="Permalink to this definition">#</a></dt>
-<dd><p>Determine if item matches function query.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">q1</span> <span class="o">=</span> <span class="n">FuncQuery</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">field1</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Item</span><span class="p">:</span> <span class="k">pass</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">item</span><span class="o">.</span><span class="n">field1</span> <span class="o">=</span> <span class="mi">6</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q1</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;obj&#39;</span><span class="p">)</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="o">~</span><span class="n">q1</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;obj&#39;</span><span class="p">)</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> – item to test</p></li>
-<li><p><strong>item_type</strong> – type of item</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if item matches query</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+</section>
+<section id="querylist">
+<h2>QueryList<a class="headerlink" href="#querylist" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyquerylist.QueryList">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyquerylist.</span></span><span class="sig-name descname"><span class="pre">QueryList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'obj'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyquerylist.QueryList" title="Permalink to this definition">#</a></dt>
@@ -490,6 +483,9 @@
 
 </dd></dl>
 
+</section>
+<section id="querygroup">
+<h2>QueryGroup<a class="headerlink" href="#querygroup" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyquerylist.QueryGroup">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyquerylist.</span></span><span class="sig-name descname"><span class="pre">QueryGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyquerylist.QueryGroup" title="Permalink to this definition">#</a></dt>
@@ -572,7 +568,7 @@
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">pyquerylist 0.2.2 documentation</p>
+            <p class="prev-next-title">pyquerylist 0.3.0 documentation</p>
         </div>
     </a>
 </div>
