@@ -78,11 +78,11 @@ example.py
         print(books.where(Q(category='fantasy') & Q(price__le=3)))
 
         # Queries can be created in 3 different ways:
-        print(Query(name='The Fruggalo') == Query('name', '=', 'The Fruggalo'))
-        print(Query(price__le=5) == Query('price', '<=', 5))
+        print(Q(name='The Fruggalo') == Q('name', '=', 'The Fruggalo'))
+        print(Q(price__le=5) == Q('price', '<=', 5))
         # These are equivalent, but not considered equal due to different definition.
-        print(Query(lambda x: x.price <= 5) != Query('price', '<=', 5))
-        print(Query(name='The Fruggalo') | Query(price__le=5) == Query(Query(name='The Fruggalo'), '|', Query(price__le=5)))
+        print(Q(lambda x: x.price <= 5) != Q('price', '<=', 5))
+        print(Q(name='The Fruggalo') | Q(price__le=5) == Q(Q(name='The Fruggalo'), '|', Q(price__le=5)))
 
         # Queries can be combined using logical operators, and ordered by field(s).
         print(
