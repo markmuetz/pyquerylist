@@ -16,6 +16,14 @@ OPMAP = {
     '>=': 'ge',
     'in': 'contains',
 }
+OPERATORS = set(getattr(operator, f'__{v}__') for v in OPMAP.values())
+
+LOGICAL_OPMAP = {
+    '|': 'or',
+    '&': 'and',
+}
+LOGICAL_OPERATORS = set(getattr(operator, f'__{v}__') for v in LOGICAL_OPMAP.values())
+
 
 ITEM_GETTERS = {
     'obj': getattr,
@@ -59,189 +67,219 @@ def _get_field_val(item, field, item_type):
     return val
 
 
-class BaseQuery:
-    """Base class for all query classes that implements logical operations (& | ~) for combining."""
+def _parse_query_args(args, kwargs):
+    """Parses arguments (args, kwargs) to Query constructor."""
+    inverted = kwargs.pop('inverted', False)
+    field = None
+    _op = None
+    op = None
+    func = None
+    multi = False
+    value = None
+    lhs = None
+    rhs = None
+    logical_op = None
 
-    def __init__(self, inverted):
-        """Constructor.
+    if bool(args) and bool(kwargs):
+        raise ValueError('Only one of args, kwargs can be set')
+    if len(args) == 1:
+        arg = args[0]
+        if callable(arg):
+            # arg is a function/lambda.
+            func = arg
+        else:
+            raise ValueError(f'Single argument {arg} not recognized, must be a callable function')
+    elif len(args) == 3:
+        if isinstance(args[0], Query) and isinstance(args[2], Query):
+            multi = True
+            lhs, logical_op, rhs = args
+            if not isinstance(logical_op, str) and logical_op not in LOGICAL_OPERATORS:
+                raise ValueError(
+                    f'Second argument of 3 (query, op, query) must be a string or a logical `operator` function'
+                )
+        else:
+            field, op, value = args
+            if not isinstance(field, str):
+                raise ValueError(f'First argument of 3 (field, op, value) must be a string')
+            if not isinstance(op, str) and op not in OPERATORS:
+                raise ValueError(f'Second argument of 3 (field, op, value) must be a string or an `operator` function')
+    elif kwargs:
+        if len(kwargs) > 1:
+            multi = True
+            lhs = None
+            logical_op = '&'
+        for k, value in kwargs.items():
+            if '__' in k:
+                field, op = k.split('__')
+            else:
+                field = k
+                op = '='
+            if multi:
+                new_query = Query(field, op, value)
+                if lhs:
+                    if rhs:
+                        rhs = Query(rhs, '&', new_query)
+                    else:
+                        rhs = new_query
+                else:
+                    lhs = new_query
 
-        :param inverted: whether to invert any matches
-        """
-        self.inverted = inverted
+    _op = op
+    if op and isinstance(op, str):
+        if op in OPMAP:
+            op = OPMAP[op]
+        try:
+            op = getattr(operator, f'__{op}__')
+        except AttributeError:
+            raise ValueError(f'operator {op} not recognized')
+    if logical_op and isinstance(logical_op, str):
+        if logical_op in LOGICAL_OPMAP:
+            logical_op = LOGICAL_OPMAP[logical_op]
+        try:
+            logical_op = getattr(operator, f'__{logical_op}__')
+        except AttributeError:
+            raise ValueError(f'operator {logical_op} not recognized')
+    return field, _op, op, value, func, multi, lhs, rhs, logical_op
 
-    def __and__(self, other):
-        return MultiQuery(self, other, operator.__and__)
 
-    def __rand__(self, other):
-        return MultiQuery(other, self, operator.__and__)
+class Query:
+    """Combinable query class.
 
-    def __or__(self, other):
-        return MultiQuery(self, other, operator.__or__)
+    Condition can be specified in different ways:
 
-    def __ror__(self, other):
-        return MultiQuery(other, self, operator.__or__)
-
-
-class Query(BaseQuery):
-    """Combinable query class, where condition is specified by a field, operator and value.
+    * specified by a field, operator and value.
+    * specified by a lambda or function.
+    * specified by key value pairs.
 
     >>> q1 = Query('field1', '>', 5)
-    >>> q2 = Query('field1', '<', 10)
+    >>> q2 = Query(lambda x: x.field1 < 10)
+    >>> q3 = Query(field1=8)
+    >>> q4 = Query(field1__lt=9, field2='a')
+    >>> q5 = Query(q1, '|', q3)
     >>> qand = q1 & q2
-    >>> qor = q1 | q2
-    >>> qnand = ~q1 & ~q2
+    >>> qor = q2 | q4
+    >>> qnand = ~q1 & ~q3
     """
 
-    def __init__(self, field, op, val, inverted=False):
-        """Constructor that takes a field, operator and value as arguments.
+    def __init__(self, *args, **kwargs):
+        """Constructor can be called using:
 
-        op can be specified using a string (used to pick from `operator.__{op}__`). See OPMAP for values.
+        Field, operator, value:
+        operator can be a string such as '<', '>', '=';
+        or a string such as 'lt', 'gt', 'eq', 'in';
+        or an attribute on the `operator` package - i.e. `operator.__gt__`.
 
-        :param field: field (of item) that will be tested
-        :param op: operator (e.g. "=") to use in test
-        :param val: value to test against
-        :param inverted: whether to invert the condition
+        >>> q = Query('field1', '>', 5)
+        >>> q = Query('field1', operator.__gt__, 5)
+        >>> q = Query('field1', 'in', [5, 6, 7])
+
+        Function or lambda:
+
+        >>> def fn(x): return x.field < 10
+        >>> q = Query(fn)
+        >>> q = Query(lambda x: x.field1 < 10)
+
+        Key value pairs:
+        field and operator can be included in the key using double underscore '__'
+        where the operator is on of e.g. 'lt', 'gt'...
+
+        >>> q = Query(field1=8)
+        >>> q = Query(field1__lt=9, field2='a')
         """
-        super().__init__(inverted)
-        self.field = field
-        self.val = val
-        self._op = op
-        if isinstance(op, str):
-            if op in OPMAP:
-                op = OPMAP[op]
-            self.op = getattr(operator, f'__{op}__')
-        else:
-            self.op = op
+        self.inverted = kwargs.pop('inverted', False)
+        (
+            self.field,
+            self._op,
+            self.op,
+            self.value,
+            self.func,
+            self.multi,
+            self.lhs,
+            self.rhs,
+            self.logical_op,
+        ) = _parse_query_args(args, kwargs)
 
     def match(self, item, item_type='obj'):
-        """Determine if item matches query.
+        """Determine if the given item is matched by this query.
 
-        >>> q1 = Query('field1', '>', 5)
         >>> class Item: pass
         >>> item = Item()
         >>> item.field1 = 6
-        >>> q1.match(item, 'obj')
+        >>> item.field2 = 'a'
+        >>> q1 = Query('field1', '>', 5)
+        >>> q2 = Query(lambda x: x.field1 < 10)
+        >>> q3 = Query(field1=8)
+        >>> q4 = Query(field1__lt=9, field2='a')
+        >>> q5 = Query(q1, '|', q3)
+        >>> q1.match(item)
         True
-        >>> (~q1).match(item, 'obj')
+        >>> q2.match(item)
+        True
+        >>> q3.match(item)
         False
+        >>> q4.match(item)
+        True
+        >>> q5.match(item)
+        True
 
         :param item: item to test
         :param item_type: type of item
         :return: True if item matches query
         """
         _check_item_type(item_type)
-        item_val = _get_field_val(item, self.field, item_type)
-        if self.op is operator.__contains__:
-            retval = self.op(self.val, item_val)
+        if self.func:
+            retval = self.func(item)
+        elif self.multi:
+            retval = self.logical_op(self.lhs.match(item, item_type), self.rhs.match(item, item_type))
         else:
-            retval = self.op(item_val, self.val)
+            item_val = _get_field_val(item, self.field, item_type)
+            if self.op is operator.__contains__:
+                retval = self.op(self.value, item_val)
+            else:
+                retval = self.op(item_val, self.value)
+
         if self.inverted:
             return retval == False
         else:
             return retval
 
-    def __repr__(self):
-        return f"Query('{self.field}', '{self._op}', {repr(self.val)}, {self.inverted})"
+    def __and__(self, other):
+        return Query(self, operator.__and__, other)
+
+    def __rand__(self, other):
+        return Query(other, operator.__and__, self)
+
+    def __or__(self, other):
+        return Query(self, operator.__or__, other)
+
+    def __ror__(self, other):
+        return Query(other, operator.__or__, self)
 
     def __invert__(self):
-        return Query(self.field, self._op, self.val, not self.inverted)
-
-
-class FuncQuery(BaseQuery):
-    """Combinable query class, where condition is specified by a function/lambda
-
-    >>> q1 = FuncQuery(lambda x: x.field1 > 5)
-    >>> q2 = FuncQuery(lambda x: x.field1 < 10)
-    >>> qand = q1 & q2
-    >>> qor = q1 | q2
-    >>> qnand = ~q1 & ~q2
-    """
-
-    def __init__(self, func, inverted=False):
-        """Constructor that takes a function/lambda as argument.
-
-        :param func: function or lambda for query condition
-        :param inverted: whether to invert the condition
-        """
-        super().__init__(inverted)
-        self.func = func
-
-    def match(self, item, item_type='obj'):
-        """Determine if item matches function query.
-
-        >>> q1 = FuncQuery(lambda x: x.field1 > 5)
-        >>> class Item: pass
-        >>> item = Item()
-        >>> item.field1 = 6
-        >>> q1.match(item, 'obj')
-        True
-        >>> (~q1).match(item, 'obj')
-        False
-
-        :param item: item to test
-        :param item_type: type of item
-        :return: True if item matches query
-        """
-        retval = self.func(item)
-        if self.inverted:
-            return retval == False
+        if self.func:
+            return Query(self.func, inverted=not self.inverted)
+        elif self.multi:
+            return Query(self.lhs, self.logical_op, self.rhs, inverted=not self.inverted)
         else:
-            return retval
+            return Query(self.field, self._op, self.value, inverted=not self.inverted)
+
+    def __neq__(self, other):
+        return not self == other
+
+    def __eq__(self, other):
+        for attr in ['field', 'op', 'value', 'func', 'lhs', 'rhs', 'logical_op', 'inverted']:
+            if getattr(self, attr) != getattr(other, attr):
+                return False
+        return True
 
     def __repr__(self):
-        return f"FuncQuery('{self.func}', {self.inverted})"
-
-    def __invert__(self):
-        return FuncQuery(self.func, not self.inverted)
-
-
-class MultiQuery(BaseQuery):
-    """When two queries are combined using e.g. &, a MultiQuery object is created."""
-
-    def __init__(self, lhs, rhs, op, inverted=False):
-        """Constructor.
-
-        :param lhs: query1
-        :param rhs: query2
-        :param op: operator used to combine query1 and query2
-        """
-        super().__init__(inverted)
-        self.lhs = lhs
-        self.rhs = rhs
-        self.op = op
-
-    def match(self, item, item_type='obj'):
-        """
-
-        >>> q1 = Query('field1', '>', 5)
-        >>> q2 = FuncQuery(lambda x: x.field1 < 10)
-        >>> class Item: pass
-        >>> item = Item()
-        >>> item.field1 = 6
-        >>> # Creates a MultiQuery.
-        >>> (q1 & q2).match(item, 'obj')
-        True
-        >>> (~(q1 | q2)).match(item, 'obj')
-        False
-
-        :param item: item to test
-        :param item_type: type of item
-        :return: True if item matches query
-        """
-        retval = self.op(
-            self.lhs.match(item, item_type), self.rhs.match(item, item_type)
-        )
-        if self.inverted:
-            return retval == False
+        if self.func:
+            return f"Query('{self.func}', inverted={self.inverted})"
+        elif self.multi:
+            opstr = '&' if self.logical_op == operator.__and__ else '|'
+            return f"Query({repr(self.lhs)}, '{opstr}', {repr(self.rhs)}, inverted={self.inverted})"
         else:
-            return retval
-
-    def __repr__(self):
-        opstr = '&' if self.op == operator.__and__ else '|'
-        return '(' + repr(self.lhs) + opstr + repr(self.rhs) + ')'
-
-    def __invert__(self):
-        return MultiQuery(self.lhs, self.rhs, self.op, not self.inverted)
+            return f"Query('{self.field}', '{self._op}', {repr(self.value)}, inverted={self.inverted})"
 
 
 class QueryList(list):
@@ -290,17 +328,8 @@ class QueryList(list):
         """
         if not query and not kwargs:
             raise ValueError('One or both of query and kwargs must be given')
-        for k, v in kwargs.items():
-            if '__' in k:
-                field, op = k.split('__')
-            else:
-                field = k
-                op = '='
-            new_query = Query(field, op, v)
-            if query:
-                query = query & new_query
-            else:
-                query = new_query
+        if kwargs:
+            query = Query(**kwargs)
 
         new_items = []
         for item in self:
@@ -331,10 +360,7 @@ class QueryList(list):
         if field:
             return [_get_field_val(item, field, self.item_type) for item in self]
         elif fields:
-            return [
-                tuple([_get_field_val(item, f, self.item_type) for f in fields])
-                for item in self
-            ]
+            return [tuple([_get_field_val(item, f, self.item_type) for f in fields]) for item in self]
         elif func:
             return [func(item) for item in self]
 
@@ -434,9 +460,7 @@ class QueryList(list):
             else:
 
                 def key(item):
-                    return tuple(
-                        [_get_field_val(item, f, self.item_type) for f in fields]
-                    )
+                    return tuple([_get_field_val(item, f, self.item_type) for f in fields])
 
         return QueryList(sorted(self, key=key, reverse=reverse), self.item_type)
 
