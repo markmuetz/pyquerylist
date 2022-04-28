@@ -3,6 +3,7 @@ import copy
 from itertools import groupby
 import operator
 
+import numexpr as ne
 from tabulate import tabulate
 
 # Operator mapping to allow symbols strings to be used for query operators.
@@ -79,6 +80,9 @@ def _parse_query_args(args, kwargs):
     lhs = None
     rhs = None
     logical_op = None
+    ex = None
+    expr = None
+    expr_inputs = None
 
     if bool(args) and bool(kwargs):
         raise ValueError('Only one of args, kwargs can be set')
@@ -87,6 +91,9 @@ def _parse_query_args(args, kwargs):
         if callable(arg):
             # arg is a function/lambda.
             func = arg
+        elif isinstance(arg, str):
+            expr = arg
+            expr_inputs = ne.NumExpr(expr).input_names
         else:
             raise ValueError(f'Single argument {arg} not recognized, must be a callable function')
     elif len(args) == 3:
@@ -139,7 +146,7 @@ def _parse_query_args(args, kwargs):
             logical_op = getattr(operator, f'__{logical_op}__')
         except AttributeError:
             raise ValueError(f'operator {logical_op} not recognized')
-    return field, _op, op, value, func, multi, lhs, rhs, logical_op
+    return field, _op, op, value, func, multi, lhs, rhs, logical_op, expr, expr_inputs
 
 
 class Query:
@@ -197,6 +204,8 @@ class Query:
             self.lhs,
             self.rhs,
             self.logical_op,
+            self.expr,
+            self.expr_inputs,
         ) = _parse_query_args(args, kwargs)
 
     def match(self, item, item_type='obj'):
@@ -211,6 +220,7 @@ class Query:
         >>> q3 = Query(field1=8)
         >>> q4 = Query(field1__lt=9, field2='a')
         >>> q5 = Query(q1, '|', q3)
+        >>> q6 = Query('(field1 > 0) & (field2 == "a")')
         >>> q1.match(item)
         True
         >>> q2.match(item)
@@ -220,6 +230,8 @@ class Query:
         >>> q4.match(item)
         True
         >>> q5.match(item)
+        True
+        >>> q6.match(item)
         True
 
         :param item: item to test
@@ -231,6 +243,10 @@ class Query:
             retval = self.func(item)
         elif self.multi:
             retval = self.logical_op(self.lhs.match(item, item_type), self.rhs.match(item, item_type))
+        elif self.expr:
+            fields = self.expr_inputs
+            vals = {f: _get_field_val(item, f, item_type) for f in fields}
+            retval = ne.evaluate(self.expr, vals).item()
         else:
             item_val = _get_field_val(item, self.field, item_type)
             if self.op is operator.__contains__:
@@ -278,6 +294,8 @@ class Query:
         elif self.multi:
             opstr = '&' if self.logical_op == operator.__and__ else '|'
             return f"Query({repr(self.lhs)}, '{opstr}', {repr(self.rhs)}, inverted={self.inverted})"
+        elif self.expr:
+            return f"Query('{self.expr}', inverted={self.inverted})"
         else:
             return f"Query('{self.field}', '{self._op}', {repr(self.value)}, inverted={self.inverted})"
 
@@ -321,6 +339,8 @@ class QueryList(list):
         QueryList([{'a': 1, 'b': 2}])
         >>> ql.where(b__gt=8)
         QueryList([{'a': 7, 'b': 9}])
+        >>> ql.where('b>3')
+        QueryList([{'a': 4, 'b': 5}, {'a': 7, 'b': 9}])
 
         :param query: query to apply
         :param kwargs: optional arguments to apply
@@ -330,6 +350,8 @@ class QueryList(list):
             raise ValueError('One or both of query and kwargs must be given')
         if kwargs:
             query = Query(**kwargs)
+        if isinstance(query, str):
+            query = Query(query)
 
         new_items = []
         for item in self:
