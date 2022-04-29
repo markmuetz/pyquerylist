@@ -50,7 +50,7 @@ setup(
     extras_require={
         'testing': ['coverage', 'flake8', 'nose'],
     },
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     classifiers=[
         'Environment :: Console',
         'Natural Language :: English',
