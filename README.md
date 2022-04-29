@@ -58,45 +58,39 @@ books = QueryList(
 if __name__ == '__main__':
     print(books.count())
     # books can be filtered on one of their fields.
-    print(books.where(name='The Fruggalo').count())
+    print(books.where('name=="The Fruggalo"').count())
     # This can also be done using a query.
-    print(books.where(Q('name', '=', 'The Fruggalo')).count())
+    print(books.where(Q('name=="The Fruggalo"')).count())
     # Queries can be inverted.
-    print(books.where(~Q('name', '=', 'The Fruggalo')).count())
+    print(books.where(~Q('name=="The Fruggalo"')).count())
     # books is a list -- can be indexed or sliced:
     print(books[:3])
 
     # books can be filtered on multiple fields, showing price <= 3.
     # if a field is a function (is callable) - it will be called (i.e. price).
-    print(books.where(category='fantasy', price__le=3))
-    # Equivalent to above using queries.
-    print(books.where(Q(category='fantasy') & Q(price__le=3)))
+    print(books.where('(category=="fantasy")&(price<=3)'))
+    # Equivalent to above using combined queries.
+    print(books.where(Q('category=="fantasy"') & Q('price<=3')))
 
-    # Queries can be created in 3 different ways:
-    print(Q(name='The Fruggalo') == Q('name', '=', 'The Fruggalo'))
-    print(Q(price__le=5) == Q('price', '<=', 5))
     # These are equivalent, but not considered equal due to different definition.
-    print(Q(lambda x: x.price <= 5) != Q('price', '<=', 5))
-    print(Q(name='The Fruggalo') | Q(price__le=5) == Q(Q(name='The Fruggalo'), '|', Q(price__le=5)))
+    print(Q(lambda x: x.price <= 5) != Q('price <= 5'))
 
     # Queries can be combined using logical operators, and ordered by field(s).
     print(
-        books.where(Q('category', '=', 'fantasy') | Q('price', '<=', 3))
+        books.where(Q('category in ["fantasy", "mystery"]') | Q('price <= 3'))
         .orderby('price', order='descending')
         .select(fields=['category', 'price'])
     )
     # `lambda`s can be used, and fields can be chosen using `.select(...)`.
     print(
-        books.where(Q('category', '=', 'fantasy') | Q(lambda x: x.price() * 2 <= 6)).select(
-            fields=['category', 'price']
-        )
+        books.where(Q('category == "fantasy"') | Q(lambda x: x.price() * 2 <= 6)).select(fields=['category', 'price'])
     )
     # Select can also take a function/lambda:
     print(books.select(func=lambda b: b.price() * 2))
 
     # Simple aggregate operations available.
     print(books.aggregate(sum, 'price'))
-    print(books.aggregate(sum, fields=['price', 'vat_price']))
+    print(books.aggregate(sum, ['price', 'vat_price']))
 
     # Simple group by operator (returns a dict subclass), with group operations count and aggregate.
     print(books.groupby('category')['mystery'])
@@ -104,5 +98,5 @@ if __name__ == '__main__':
     print(books.groupby('category').aggregate(sum, 'price'))
 
     # QueryLists can be formatted for tabular display.
-    print(books.where(category='fantasy').tabulate(['name', 'price']))
+    print(books.where('category=="fantasy"').tabulate(['name', 'price']))
 ```
