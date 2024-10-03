@@ -50,10 +50,13 @@ def _get_field_val(item, field, item_type):
     """
     _check_item_type(item_type)
     getter = ITEM_GETTERS[item_type]
-    val = getter(item, field)
-    if _callable_no_arg(val):
-        val = val()
-    return val
+    if hasattr(item, field):
+        val = getter(item, field)
+        if _callable_no_arg(val):
+            val = val()
+        return val
+    else:
+        return None
 
 
 def _callable_no_arg(obj):
