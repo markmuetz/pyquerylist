@@ -142,6 +142,9 @@ class Query:
     allowed_ast_types = {
         # BinOps.
         ast.BinOp,
+        ast.BoolOp,
+        ast.And,
+        ast.Or,
         ast.Add,
         ast.Sub,
         ast.Mult,
