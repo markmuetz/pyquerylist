@@ -50,7 +50,8 @@ def _get_field_val(item, field, item_type):
     """
     _check_item_type(item_type)
     getter = ITEM_GETTERS[item_type]
-    if hasattr(item, field):
+    # hasattr only checks for item presence in objects: dicts need to use the field in x pattern
+    if (getter == getattr and hasattr(item, field)) or (getter == dict.__getitem__ and field in item):
         val = getter(item, field)
         if _callable_no_arg(val):
             val = val()
@@ -315,10 +316,25 @@ class Query:
         return not self == other
 
     def __eq__(self, other):
-        for attr in ['expr', 'func', 'lhs', 'rhs', 'logical_op', 'inverted']:
-            if getattr(self, attr) != getattr(other, attr):
-                return False
-        return True
+        # If either is a function, change the expression operand to the function bytecode
+        # hence comparisons compare against the function's bytecode itself instead of the query's address
+        selfExpr = self.expr if self.func == None else self.func.__code__
+        otherExpr = other.expr if other.func == None else other.func.__code__
+
+        if selfExpr == None or otherExpr == None:
+            if self.multi and other.multi:
+                return self.lhs == other.lhs and \
+                  self.rhs == other.rhs and \
+                  self.logical_op == other.logical_op
+            else:
+                # Are two None queries are equal? Also, a multi and a none is an invalid op, should that Raise?
+                return True
+
+        # Compare bytecode instructions, variables, consts and inversion of queries or functions
+        return  (getattr(selfExpr, 'co_code') == getattr(otherExpr, 'co_code')) and \
+          (getattr(selfExpr, 'co_names') == getattr(otherExpr, 'co_names')) and \
+          (getattr(selfExpr, 'co_consts') == getattr(otherExpr, 'co_consts')) and \
+          self.inverted == other.inverted
 
     def __repr__(self):
         if self.expr_str:

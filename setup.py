@@ -48,7 +48,7 @@ setup(
         'tabulate',
     ],
     extras_require={
-        'testing': ['coverage', 'flake8', 'nose'],
+        'testing': ['coverage', 'flake8', 'pytest'],
     },
     python_requires='>=3.8',
     classifiers=[
