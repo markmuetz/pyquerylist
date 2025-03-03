@@ -20,7 +20,7 @@ jobs:
         # python-version: [3.7, 3.8, 3.9, "3.10"]
         # 3.10 failing with: AttributeError: module 'collections' has no attribute 'Callable'
         # nose problem I think.
-        python-version: [3.8, 3.9]
+        python-version: [3.8, 3.9, 3.13]
 
     steps:
     - uses: actions/checkout@v2
@@ -33,9 +33,9 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install .[testing]
         # pip install babelfish -U
-    - name: Test with nose and doctest
+    - name: Pytest unit tests
       run: |
-        nosetests tests
-        cd ./pyquerylist
-        nosetests --with-doctest *.py
-        cd ..
+        pytest tests
+    - name: Pytest doctests
+      run: |
+        pytest --doctest-modules pyquerylist
